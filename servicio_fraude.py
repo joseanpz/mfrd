@@ -1,3 +1,5 @@
+import logging
+from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask import request
 from flask import json
@@ -10,11 +12,17 @@ from statsmodels.stats.outliers_influence import OLSInfluence
 from models.buro import InformacionBuroModel
 
 app = Flask(__name__)
+logging_handler = RotatingFileHandler('logs/mfrd.log', maxBytes=10000, backupCount=1)
+logging_handler.setLevel(logging.INFO)
+app.logger.addHandler(logging_handler)
 
 
 @app.route('/', methods=['POST'])
 def verificacion_fraude():
     print(request)
+    app.logger.warning('A warning has occurred')
+    app.logger.error('An error occurred')
+    app.logger.info('Info')
 
     #TODO: validar json de la peticion reasignar el parámetro NEW_OBS$MOP_MAXIMO_U24M_SERVSGRALES
     # NEW_OBS$MOP_MAXIMO_U24M_SERVSGRALES = 9 - NEW_OBS$MOP_MAXIMO_U24M_SERVSG

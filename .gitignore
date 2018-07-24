@@ -67,3 +67,9 @@ fabric.properties
 
 #virtual environment
 venv/
+
+#python
+*__pycache__
+
+#logs
+logs
