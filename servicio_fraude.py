@@ -1,4 +1,5 @@
 import logging
+import os
 from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask import request
@@ -15,6 +16,9 @@ app = Flask(__name__)
 logging_handler = RotatingFileHandler('logs/mfrd.log', maxBytes=10000, backupCount=1)
 logging_handler.setLevel(logging.INFO)
 app.logger.addHandler(logging_handler)
+
+
+CUTOFF = os.environ.get('CUTOFF', 0.000032891)
 
 
 @app.route('/', methods=['POST'])
@@ -61,7 +65,7 @@ def verificacion_fraude():
         "riesgo_fraude": False,
         "cook_value": a[-1]
     }
-    if data['cook_value'] > 0.000032891:
+    if data['cook_value'] > CUTOFF:
         data["riesgo_fraude"] = True
 
     return Response(json.dumps(data), status=200, mimetype='application/json')
