@@ -29,8 +29,13 @@ def verificacion_fraude():
     app.logger.info('Info')
 
     #TODO: validar json de la peticion reasignar el parámetro NEW_OBS$MOP_MAXIMO_U24M_SERVSGRALES
-    # NEW_OBS$MOP_MAXIMO_U24M_SERVSGRALES = 9 - NEW_OBS$MOP_MAXIMO_U24M_SERVSG
+    #NEW_OBS$MOP_MAXIMO_U24M_SERVSGRALES = 9 - NEW_OBS$MOP_MAXIMO_U24M_SERVSG
+
+
     jat_fraudes = pd.read_csv("JAT_FRAUDES.csv", usecols=[3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+
+    if request.json['MOP_MAXIMO_U24M_SERVSGRALES'] != -1:
+        request.json['MOP_MAXIMO_U24M_SERVSGRALES'] = 9 - request.json['MOP_MAXIMO_U24M_SERVSGRALES']
 
     jat_fraudes = jat_fraudes.append(request.json, ignore_index=True)
 
@@ -44,20 +49,25 @@ def verificacion_fraude():
     jat_fraudes.loc[jat_fraudes["PCT_ALERTAS_JUICIOS"] == -1, 'PCT_ALERTAS_JUICIOS'] = np.NaN
     jat_fraudes.loc[jat_fraudes["UNIVERSO_11"] == -1, 'UNIVERSO_11'] = np.NaN
 
+    # imputacion a nulos o vacios por la mediana
     jat_fraudes = jat_fraudes.fillna(jat_fraudes.median())
 
+    # homologar banderas fraude a 1
     jat_fraudes.loc[jat_fraudes["UNIVERSO_11"] == 2, 'UNIVERSO_11'] = 1
 
+    # escalamos a dispersion normal de la muestra
     scaler = StandardScaler()
-
     scaled_params = scaler.fit_transform(jat_fraudes.drop('UNIVERSO_11', axis=1))
 
     y = jat_fraudes.loc[::, 'UNIVERSO_11']
-    X = scaled_params
+    X = sm.add_constant(scaled_params)
     model = sm.OLS(y, X)
     results = model.fit()
+    print(results.summary())
 
     influence = OLSInfluence(results)
+
+    # se calcula la distancia de cook
     a, b = influence.cooks_distance
 
     # summary = influence.summary_frame()
