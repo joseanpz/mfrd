@@ -71,5 +71,8 @@ venv/
 #python
 *__pycache__
 
-#logs
+# logs
 logs
+
+# data files
+data

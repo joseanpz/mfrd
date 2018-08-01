@@ -42,7 +42,7 @@ class FraudDataModel(DataModel):
     Modelo de Infromación de buró usado para diagnosticar la posibilidad de presencia fraude en un cliente
     """
 
-    csv_file = 'JAT_FRAUDES.csv'
+    csv_file = 'data/JAT_FRAUDES.csv'
     columns = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     target = 'UNIVERSO_11'
     scaler = StandardScaler()
