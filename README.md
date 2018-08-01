@@ -1,5 +1,6 @@
 # Modelo de Riesgo de Fraude
-Se recomienda instalar ambiente virtual con python 3.6+. Para instalar requerimintos ejecutar
+Se recomienda instalar ambiente virtual, el ambiente debe tener con python 3.6+.
+Para instalar requerimientos ejecutar
 ```
 pip install -r requirements.txt
 ```
