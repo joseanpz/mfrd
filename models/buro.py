@@ -15,7 +15,7 @@ class DataModel(object):
 
     def __init__(self, *args, **kwargs):
         self.dataframe = pd.read_csv(self.csv_file, usecols=self.columns)
-        self._intecept = None
+        self._intercept = None
         self._data = None
         
     def validate(self):
