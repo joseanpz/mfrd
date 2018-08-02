@@ -12,3 +12,6 @@ Para correr el servicio en un servidor de aplicaciones wsgi ejecutar
 ```
 gunicorn app:app -b 0.0.0.0:5000
 ```
+
+
+
